@@ -1,0 +1,192 @@
+5. Consider the following database of student enrolment in courses and books adopted each 
+course.
+ STUDENT (regno: string, name: string, major: string, bdate: date)
+ COURSE (course: int, cname: string, dept: string)
+ ENROLL (#regno: string, course#: int, sem: int marks: int)
+ TEXT (book-ISBN: int, book-title: string, publisher: string, author: string)
+ BOOK_ADOPTION (course#: int, sem: int, book-ISBN#: int)
+i.Create the above tables by properly specifying the primary keys and the foreign 
+Keys.
+ii. Enter at least five tuples for each relation.
+iii. Demonstrate how you add a textbook to the database and make this book be
+adapted by some department.
+iv. Produce list of textbooks (include Course#, Book-ISBN, Book-title) in the 
+alphabetical order for courses offered by the CS department that use more than 
+two books.
+v. List any department that has its adopted books published by a specific publisher.
+
+
+mysql> use studentenroll;
+Database changed
+mysql> desc student;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| reg_no | varchar(10) | NO   | PRI | NULL    |       |
+| name   | varchar(10) | YES  |     | NULL    |       |
+| major  | varchar(10) | YES  |     | NULL    |       |
+| bdate  | date        | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> desc course;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| course | int(11)     | NO   | PRI | NULL    |       |
+| cname  | varchar(10) | YES  |     | NULL    |       |
+| dname  | varchar(10) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> desc enroll;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| reg_no | varchar(10) | YES  | MUL | NULL    |       |
+| course | int(11)     | YES  | MUL | NULL    |       |
+| sem    | int(11)     | NO   | PRI | NULL    |       |
+| marks  | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> desc text;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| book_isbn  | int(11)     | NO   | PRI | NULL    |       |
+| book_title | varchar(10) | YES  |     | NULL    |       |
+| publisher  | varchar(10) | YES  |     | NULL    |       |
+| author     | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> desc book_adoption;
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| course    | int(11) | YES  | MUL | NULL    |       |
+| sem       | int(11) | YES  | MUL | NULL    |       |
+| book_isbn | int(11) | YES  | MUL | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> select * from student;
++--------+--------+------------+------------+
+| reg_no | name   | major      | bdate      |
++--------+--------+------------+------------+
+| cs1    | vijay  | computers  | 1986-01-15 |
+| cs2    | neeta  | computers  | 1986-02-15 |
+| cs3    | vinod  | networking | 1986-03-15 |
+| cs4    | harish | networking | 1986-04-15 |
+| cs5    | ankit  | electronis | 1986-10-15 |
++--------+--------+------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from course;
++--------+-------+----------+
+| course | cname | dname    |
++--------+-------+----------+
+|      1 | bca   | cs       |
+|      2 | bcom  | commerse |
+|      3 | be    | cs       |
+|      4 | be    | is       |
+|      5 | bsc   | cs       |
++--------+-------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from enroll;
++--------+--------+-----+-------+
+| reg_no | course | sem | marks |
++--------+--------+-----+-------+
+| cs1    |      1 |   2 |    95 |
+| cs2    |      2 |   4 |    85 |
+| cs3    |      3 |   5 |    86 |
+| cs5    |      5 |   6 |    98 |
+| cs4    |      4 |   7 |    92 |
++--------+--------+-----+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from text;
++-----------+------------+-----------+---------+
+| book_isbn | book_title | publisher | author  |
++-----------+------------+-----------+---------+
+|       111 | c++        | pearson   | petrick |
+|       222 | java       | tata      | robert  |
+|       333 | unix       | tata      | lene    |
+|       444 | c          | pearson   | john    |
+|       555 | jzee       | tata      | james   |
++-----------+------------+-----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from book_adoption;
++--------+------+-----------+
+| course | sem  | book_isbn |
++--------+------+-----------+
+|      1 |    2 |       111 |
+|      2 |    7 |       444 |
+|      3 |    4 |       222 |
+|      4 |    6 |       333 |
+|      5 |    2 |       555 |
++--------+------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> insert into text values(666,'ada','tata','clerik');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into book_adoption values(5,2,666);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from text;
++-----------+------------+-----------+---------+
+| book_isbn | book_title | publisher | author  |
++-----------+------------+-----------+---------+
+|       111 | c++        | pearson   | petrick |
+|       222 | java       | tata      | robert  |
+|       333 | unix       | tata      | lene    |
+|       444 | c          | pearson   | john    |
+|       555 | jzee       | tata      | james   |
+|       666 | ada        | tata      | clerik  |
++-----------+------------+-----------+---------+
+6 rows in set (0.00 sec)
+
+mysql> select * from book_adoption;
++--------+------+-----------+
+| course | sem  | book_isbn |
++--------+------+-----------+
+|      1 |    2 |       111 |
+|      2 |    7 |       444 |
+|      3 |    4 |       222 |
+|      4 |    6 |       333 |
+|      5 |    2 |       555 |
+|      5 |    2 |       666 |
++--------+------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select b.course, t.book_isbn, t.book_title
+    -> from book_adoption b, text t, course c
+    -> where c.course = b.course and c.dname = 'cs'
+    -> and b.book_isbn = t.book_isbn
+    -> and c.course in(select course from book_adoption
+    -> group by course having count(*) >= 2)
+    -> order by t.book_title;
++--------+-----------+------------+
+| course | book_isbn | book_title |
++--------+-----------+------------+
+|      5 |       666 | ada        |
+|      5 |       555 | jzee       |
++--------+-----------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select c.dname
+    -> from course c, text t, book_adoption b
+    -> where t.publisher = 'pearson'
+    -> and c.course = b.course
+    -> and b.book_isbn = t.book_isbn;
++----------+
+| dname    |
++----------+
+| cs       |
+| commerse |
++----------+
+2 rows in set (0.00 sec)

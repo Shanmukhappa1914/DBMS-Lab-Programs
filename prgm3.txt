@@ -1,0 +1,298 @@
+3. Consider the Insurances database given below. The primary keys are underlined and 
+the data types are specified.
+ PERSON (DRIVER-ID#: string, name: string, address: string)
+ CAR (Regno: string, model: string, year: int)
+ ACCIDENT (report-number: int, date: date, location: string) 
+ OWNS (#driver-id: string, #Regno: string)
+ PARTICIPATED (#driver-id: string, #Regno: string, #report-number: int, 
+ Damage amount: int) 
+i. Create the above tables by property specifying the primary keys and the foreign 
+keys.
+ii. Enter atleast five tables for each relation.
+iii. Demonstrate how you 
+a. Update the damage amount for the car with a specific Regno in the accident 
+with report number 12 to 25000.
+b. Add a new accident to the database.
+iv. Find the total number of people who owned cars that were involved in 
+accidents in 2002. 
+v. Find the total number of accidents in which cars belonging to a specific model
+were involved
+
+mysql> show tables;
++---------------------+
+| Tables_in_insurance |
++---------------------+
+| accident            |
+| car                 |
+| owns                |
+| participited        |
+| person              |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> desc participited;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| driver_id  | varchar(20) | YES  | MUL | NULL    |       |
+| regno      | varchar(20) | YES  | MUL | NULL    |       |
+| report_no  | int(11)     | YES  | MUL | NULL    |       |
+| damage_amt | int(11)     | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> insert into person values('c01',Tony,'Bengore');
+ERROR 1054 (42S22): Unknown column 'Tony' in 'field list'
+mysql> insert into person values('c01','Tony','Bengore');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into person values('c02','Tom','Benglore');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into person values('c03','Jerry','Gadag');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into person values('c04','Motu','Hubli');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into person values('c05','Patlu','Gadag');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from person;
++-----------+-------+----------+
+| driver_id | name  | address  |
++-----------+-------+----------+
+| c01       | Tony  | Bengore  |
+| c02       | Tom   | Benglore |
+| c03       | Jerry | Gadag    |
+| c04       | Motu  | Hubli    |
+| c05       | Patlu | Gadag    |
++-----------+-------+----------+
+5 rows in set (0.01 sec)
+
+mysql> desc person;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| driver_id | varchar(20) | NO   | PRI | NULL    |       |
+| name      | varchar(20) | YES  |     | NULL    |       |
+| address   | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into car values('r01','RR',2002);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into car values('r02','BMW',2003);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into car values('r03','Ford',2002);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into car values('r04','Tata',2001);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into car values('r05','Tesla',2002);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from car;
++-------+-------+------+
+| regno | model | year |
++-------+-------+------+
+| r01   | RR    | 2002 |
+| r02   | BMW   | 2003 |
+| r03   | Ford  | 2002 |
+| r04   | Tata  | 2001 |
+| r05   | Tesla | 2002 |
++-------+-------+------+
+5 rows in set (0.01 sec)
+
+mysql> insert into accident values(
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql>
+mysql> insert into accident values(11,'2002-01-02','Banglore');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into accident values(12,'2003-01-02','Batageri');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into accident values(13,'2002-02-02','Hubli');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into accident values(14,'2001-02-02','Mysore');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into accident values(15,'2002-01-01','Gadag');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from accident;
++-----------+------------+----------+
+| report_no | adate      | location |
++-----------+------------+----------+
+|        11 | 2002-01-02 | Banglore |
+|        12 | 2003-01-02 | Batageri |
+|        13 | 2002-02-02 | Hubli    |
+|        14 | 2001-02-02 | Mysore   |
+|        15 | 2002-01-01 | Gadag    |
++-----------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> insert into owns values('c01','r01');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into owns values('c02','r02');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into owns values('c03','r03');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into owns values('c04','r04');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into owns values('c05','r05');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from owns;
++-----------+-------+
+| driver_id | regno |
++-----------+-------+
+| c01       | r01   |
+| c02       | r02   |
+| c03       | r03   |
+| c04       | r04   |
+| c05       | r05   |
++-----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into participited('c01','r01',11,40000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''c01','r01',11,40000)' at line 1
+mysql> insert into participited values('c01','r01',11,40000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into participited values('c02','r02',12,10000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into participited values('c03','r03',13,30000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into participited values('c04','r04',14,35000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into participited values('c05','r05',15,50000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from participited;
++-----------+-------+-----------+------------+
+| driver_id | regno | report_no | damage_amt |
++-----------+-------+-----------+------------+
+| c01       | r01   |        11 |      40000 |
+| c02       | r02   |        12 |      10000 |
+| c03       | r03   |        13 |      30000 |
+| c04       | r04   |        14 |      35000 |
+| c05       | r05   |        15 |      50000 |
++-----------+-------+-----------+------------+
+5 rows in set (0.01 sec)
+
+mysql> update participited
+    -> set damage_amt = 25000
+    -> where reg_no = 'r02' and reportno = 12;
+ERROR 1054 (42S22): Unknown column 'reg_no' in 'where clause'
+mysql>
+mysql>
+mysql> update participited
+    -> set damage_amt = 25000
+    -> where regno = 'r02' and report_no = 12;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from participited;
++-----------+-------+-----------+------------+
+| driver_id | regno | report_no | damage_amt |
++-----------+-------+-----------+------------+
+| c01       | r01   |        11 |      40000 |
+| c02       | r02   |        12 |      25000 |
+| c03       | r03   |        13 |      30000 |
+| c04       | r04   |        14 |      35000 |
+| c05       | r05   |        15 |      50000 |
++-----------+-------+-----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into accident values('r06','2001-01-01','Haveri');
+ERROR 1366 (HY000): Incorrect integer value: 'r06' for column 'report_no' at row 1
+mysql> insert into accident values(16,'2001-01-01','Haveri');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from accident;
++-----------+------------+----------+
+| report_no | adate      | location |
++-----------+------------+----------+
+|        11 | 2002-01-02 | Banglore |
+|        12 | 2003-01-02 | Batageri |
+|        13 | 2002-02-02 | Hubli    |
+|        14 | 2001-02-02 | Mysore   |
+|        15 | 2002-01-01 | Gadag    |
+|        16 | 2001-01-01 | Haveri   |
++-----------+------------+----------+
+6 rows in set (0.00 sec)
+
+mysql> select count(driver_id)
+    -> from participited p,accident a
+    -> where p.report_no = a.report_no and
+    -> adate between '2002-01-01' and '2002-12-31';
++------------------+
+| count(driver_id) |
++------------------+
+|                3 |
++------------------+
+1 row in set (0.01 sec)
+
+mysql> select count(*)
+    -> from participited p,accident a
+    -> where p.report_no = a.report_no and
+    -> adate between '2002-01-01' and '2002-12-31';
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.01 sec)
+
+mysql> select count(report_no)
+    -> from participited p,car c
+    -> where p.regno = c.regno and model = 'Ford';
++------------------+
+| count(report_no) |
++------------------+
+|                1 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select count(*)
+    -> from participited p,car c
+    -> where p.regno = c.regno and model = 'Ford';
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select count(*)
+    -> from car where model = 'ford';
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select count(*)
+    -> from accident
+    -> where adate between '2002-01-01' and '2002-12-31';
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.00 sec)

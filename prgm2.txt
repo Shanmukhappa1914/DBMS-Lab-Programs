@@ -1,0 +1,248 @@
+2. Consider the following schema for Order Database:
+SALESMAN (Salesman_id, Name, City, Commission)
+CUSTOMER (Customer_id, Cust_Name, City, Grade,Salesman_id)
+ORDERS (Ord_No, Purchase_Amt, Ord_Date, #Customer_id, Salesman_id)
+Write SQL queries to
+i. Count the customers with grades above Bangalore’s average.
+ii. Find the name and numbers of all salesmen who had more than one customer.
+iii. List all salesmen and indicate those who have and don’t have customers in their 
+cities (Use UNION operation.)
+iv. Create a view that finds the salesman who has the customer with the highest order 
+of a day.
+v. Demonstrate the DELETE operation by removing salesman with id 1000. All his
+orders must also be deleted.
+
+mysql> create database OrderDetails;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use OrderDetails;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table salesman(salesman_id int primary key,name varchar(20),city varchar(20),commission int)
+    -> ;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into salesman values(01,'Tony','Banglore',1000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into salesman values(02,'Tom','Banglore',2000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into salesman values(03,'Jerry','Gadag',1000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into salesman values(04,'Motu','Hubli',1200);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into salesman values(05,'Patlu','Banglore',1500);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from salesman;
++-------------+-------+----------+------------+
+| salesman_id | name  | city     | commission |
++-------------+-------+----------+------------+
+|           1 | Tony  | Banglore |       1000 |
+|           2 | Tom   | Banglore |       2000 |
+|           3 | Jerry | Gadag    |       1000 |
+|           4 | Motu  | Hubli    |       1200 |
+|           5 | Patlu | Banglore |       1500 |
++-------------+-------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> create table Customer(customer_id int primary key,cust_name varchar(20),city varchar(20),grade int,salesman_id int);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into customer values(101,'Raja','Banglore',9,01);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values(102,'Rani','Banglore',7,02);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values(103,'Roro','Hubli',8,03);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into customer values(104,'Rocket','Gadag',8,04);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values(105,'Rowdy','Hubli',9,05);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from customer;
++-------------+-----------+----------+-------+-------------+
+| customer_id | cust_name | city     | grade | salesman_id |
++-------------+-----------+----------+-------+-------------+
+|         101 | Raja      | Banglore |     9 |           1 |
+|         102 | Rani      | Banglore |     7 |           2 |
+|         103 | Roro      | Hubli    |     8 |           3 |
+|         104 | Rocket    | Gadag    |     8 |           4 |
+|         105 | Rowdy     | Hubli    |     9 |           5 |
++-------------+-----------+----------+-------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> create table Orders(ord_no int primary key,purchase_amt int,ord_date date,customer_id int,salesman_id int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into orders values(1001,100000,'2000-08-08',101,01);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders values(1002,130000,'2001-08-08',102,02);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into orders values(1001,100000,'2000-02-08',103,03);
+ERROR 1062 (23000): Duplicate entry '1001' for key 'PRIMARY'
+mysql> insert into orders values(1003,100000,'2000-02-08',103,03);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders values(1004,200000,'2001-02-08',104,04);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders values(1005,230000,'2000-01-01',105,05);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Orders;
++--------+--------------+------------+-------------+-------------+
+| ord_no | purchase_amt | ord_date   | customer_id | salesman_id |
++--------+--------------+------------+-------------+-------------+
+|   1001 |       100000 | 2000-08-08 |         101 |           1 |
+|   1002 |       130000 | 2001-08-08 |         102 |           2 |
+|   1003 |       100000 | 2000-02-08 |         103 |           3 |
+|   1004 |       200000 | 2001-02-08 |         104 |           4 |
+|   1005 |       230000 | 2000-01-01 |         105 |           5 |
++--------+--------------+------------+-------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> alter table orders
+    -> add foreign key(customer_id) references customer(customer_id);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> alter table customer
+    -> add foreign key(salesman_id) references salesman(salesman_id);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> alter table orders
+    -> add foreign key(salesman_id) references salesman(salesman_id);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+mysql> desc customer;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| customer_id | int(11)     | NO   | PRI | NULL    |       |
+| cust_name   | varchar(20) | YES  |     | NULL    |       |
+| city        | varchar(20) | YES  |     | NULL    |       |
+| grade       | int(11)     | YES  |     | NULL    |       |
+| salesman_id | int(11)     | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> desc orders;
++--------------+---------+------+-----+---------+-------+
+| Field        | Type    | Null | Key | Default | Extra |
++--------------+---------+------+-----+---------+-------+
+| ord_no       | int(11) | NO   | PRI | NULL    |       |
+| purchase_amt | int(11) | YES  |     | NULL    |       |
+| ord_date     | date    | YES  |     | NULL    |       |
+| customer_id  | int(11) | YES  | MUL | NULL    |       |
+| salesman_id  | int(11) | YES  | MUL | NULL    |       |
++--------------+---------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+
+mysql> select count(*)
+    -> from customer
+    -> where grade > (select avg(grade) from customer
+    -> where city = "Benglore");
++----------+
+| count(*) |
++----------+
+|        0 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select count(*)
+    -> from customer
+    -> where grade > (select avg(grade) from customer
+    -> where city = "gadag");
++----------+
+| count(*) |
++----------+
+|        2 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select name,salesman_id
+    -> from salesman s
+    -> where 5 > (select count(*) from customer
+    -> where salesman_id = s.salesman_id);
++-------+-------------+
+| name  | salesman_id |
++-------+-------------+
+| Tony  |           1 |
+| Tom   |           2 |
+| Jerry |           3 |
+| Motu  |           4 |
+| Patlu |           5 |
++-------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select name,salesman_id
+    -> from salesman s
+    -> where 3 > (select count(*) from customer
+    -> where salesman_id = s.salesman_id);
++-------+-------------+
+| name  | salesman_id |
++-------+-------------+
+| Tony  |           1 |
+| Tom   |           2 |
+| Jerry |           3 |
+| Motu  |           4 |
+| Patlu |           5 |
++-------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select salesman.salesman_id,name,cust_name,commission
+    -> from salesman,customer
+    -> where salesman.city = customer.city
+    -> UNION
+    -> (select salesman_id,name,'NO Match',commission
+    -> from salesman
+    -> where NOT city = any(select city from customer)
+    -> order by 2 desc);
++-------------+-------+-----------+------------+
+| salesman_id | name  | cust_name | commission |
++-------------+-------+-----------+------------+
+|           1 | Tony  | Raja      |       1000 |
+|           2 | Tom   | Raja      |       2000 |
+|           5 | Patlu | Raja      |       1500 |
+|           1 | Tony  | Rani      |       1000 |
+|           2 | Tom   | Rani      |       2000 |
+|           5 | Patlu | Rani      |       1500 |
+|           4 | Motu  | Roro      |       1200 |
+|           3 | Jerry | Rocket    |       1000 |
+|           4 | Motu  | Rowdy     |       1200 |
++-------------+-------+-----------+------------+
+9 rows in set (0.00 sec)
+
+
+mysql> create view sm0
+    -> as select s.name,c.cust_name
+    -> from salesman s, customer c, orders o
+    -> where s.salesman_id = c.salesman_id
+    -> and c.customer_id = o.customer_id
+    -> and purchase_amt = (select max(purchase_amt) from orders);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from sm0;
++-------+-----------+
+| name  | cust_name |
++-------+-----------+
+| Patlu | Rowdy     |
++-------+-----------+
+1 row in set (0.00 sec)
+

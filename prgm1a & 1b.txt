@@ -1,0 +1,513 @@
+A ) Create the following relation for the student : 
+ Student (regno : string , name : string, class :string, bdate: date, marks1:int, 
+ marks1:int, marks2:int, marks3:int)
+i. Enter atleast five tuples of the above relation 
+ii. Demonstrate the usage of following clauses for the above relation
+a. Where c. Having 
+b. Order By d. Group By
+iii. Demonstrate the usage of following clauses for the above relation
+a. Sum c. Count e. Between
+b. Avg d. Like f. Max & Min
+iv. Demonstrate the rollback and commit command for the above relation
+B) Consider the following database that maintain information about employees & 
+Departments.
+ 
+ Employee(empid: int, ename:string, age:int, salary:int, #deptno:int)
+ Department(deptno:int, dname: string, #manager-id: int) 
+i. Create the above tables by properly specifying the primary keys & foreign 
+keys.
+ii. Enter at least 5 tuples for each relation.
+iii. Display emp-id & emp name whose salary lies between 10,000 and 50,000.
+iv. List empname & salary for all the employee working for CS Dept.
+v. Display empname & deptname for all the managers.
+
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database StudentInfo;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use StudentInfo;
+Database changed
+mysql> show tables;
+Empty set (0.01 sec)
+
+mysql> create table Student(regno varchar(20) primary key,name varchar(20),class varchar(20),bdate date,marks1 int,marks2 int,marks3 int);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc Student;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| regno  | varchar(20) | NO   | PRI | NULL    |       |
+| name   | varchar(20) | YES  |     | NULL    |       |
+| class  | varchar(20) | YES  |     | NULL    |       |
+| bdate  | date        | YES  |     | NULL    |       |
+| marks1 | int(11)     | YES  |     | NULL    |       |
+| marks2 | int(11)     | YES  |     | NULL    |       |
+| marks3 | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+7 rows in set (0.02 sec)
+
+mysql> insert into Student values('co1','Tony','bca','2000-01-01',95,90,99);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values('co2','Tom','bcom','2000-02-02',90,91,92);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values('co3','Jerry','bsc','2000-03-03',92,94,92);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values('co4','Motu','bba','2000-04-04',94,93,91);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values('co5','Patlu','bca','2000-05-05',92,96,94);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Student;
++-------+-------+-------+------------+--------+--------+--------+
+| regno | name  | class | bdate      | marks1 | marks2 | marks3 |
++-------+-------+-------+------------+--------+--------+--------+
+| co1   | Tony  | bca   | 2000-01-01 |     95 |     90 |     99 |
+| co2   | Tom   | bcom  | 2000-02-02 |     90 |     91 |     92 |
+| co3   | Jerry | bsc   | 2000-03-03 |     92 |     94 |     92 |
+| co4   | Motu  | bba   | 2000-04-04 |     94 |     93 |     91 |
+| co5   | Patlu | bca   | 2000-05-05 |     92 |     96 |     94 |
++-------+-------+-------+------------+--------+--------+--------+
+5 rows in set (0.02 sec)
+
+mysql> select * from student
+    -> where regno >= 'co2';
++-------+-------+-------+------------+--------+--------+--------+
+| regno | name  | class | bdate      | marks1 | marks2 | marks3 |
++-------+-------+-------+------------+--------+--------+--------+
+| co2   | Tom   | bcom  | 2000-02-02 |     90 |     91 |     92 |
+| co3   | Jerry | bsc   | 2000-03-03 |     92 |     94 |     92 |
+| co4   | Motu  | bba   | 2000-04-04 |     94 |     93 |     91 |
+| co5   | Patlu | bca   | 2000-05-05 |     92 |     96 |     94 |
++-------+-------+-------+------------+--------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select regno name
+    -> from srudent
+    -> group by bdate
+    -> having regno >= 'co3';
+ERROR 1146 (42S02): Table 'studentinfo.srudent' doesn't exist
+mysql>
+mysql> select regno name
+    -> from srudent
+    -> ;
+ERROR 1146 (42S02): Table 'studentinfo.srudent' doesn't exist
+mysql>
+mysql> select regno name
+    -> from student
+    -> group by bdate
+    -> having regno >= 'co3';
++------+
+| name |
++------+
+| co3  |
+| co4  |
+| co5  |
++------+
+3 rows in set (0.00 sec)
+
+mysql> select regno,name
+    -> from student
+    -> group by bdate
+    -> having regno >= 'co3';
++-------+-------+
+| regno | name  |
++-------+-------+
+| co3   | Jerry |
+| co4   | Motu  |
+| co5   | Patlu |
++-------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from student
+    -> order by name;
++-------+-------+-------+------------+--------+--------+--------+
+| regno | name  | class | bdate      | marks1 | marks2 | marks3 |
++-------+-------+-------+------------+--------+--------+--------+
+| co3   | Jerry | bsc   | 2000-03-03 |     92 |     94 |     92 |
+| co4   | Motu  | bba   | 2000-04-04 |     94 |     93 |     91 |
+| co5   | Patlu | bca   | 2000-05-05 |     92 |     96 |     94 |
+| co2   | Tom   | bcom  | 2000-02-02 |     90 |     91 |     92 |
+| co1   | Tony  | bca   | 2000-01-01 |     95 |     90 |     99 |
++-------+-------+-------+------------+--------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select regno,name
+    -> from student
+    -> group by name;
++-------+-------+
+| regno | name  |
++-------+-------+
+| co3   | Jerry |
+| co4   | Motu  |
+| co5   | Patlu |
+| co2   | Tom   |
+| co1   | Tony  |
++-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select sum(marks1)
+    -> from student;
++-------------+
+| sum(marks1) |
++-------------+
+|         463 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(marks1)
+    -> from student;
++-------------+
+| sum(marks1) |
++-------------+
+|         463 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(marks2)
+    -> from student;
++-------------+
+| sum(marks2) |
++-------------+
+|         464 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(marks1)
+    -> from student;
++-------------+
+| avg(marks1) |
++-------------+
+|     92.6000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(marks2)
+    -> from student;
++-------------+
+| avg(marks2) |
++-------------+
+|     92.8000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql>  select count(*)
+    -> from student;
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select * from student
+    -> between 'co1' and co4';
+    '> ;
+    '> ';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'between 'co1' and co4';
+;
+'' at line 2
+mysql>
+mysql> select * from student
+    -> where regno
+    -> between 'co1' and 'co2';
++-------+------+-------+------------+--------+--------+--------+
+| regno | name | class | bdate      | marks1 | marks2 | marks3 |
++-------+------+-------+------------+--------+--------+--------+
+| co1   | Tony | bca   | 2000-01-01 |     95 |     90 |     99 |
+| co2   | Tom  | bcom  | 2000-02-02 |     90 |     91 |     92 |
++-------+------+-------+------------+--------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student
+    -> where name
+    -> like "T%";
++-------+------+-------+------------+--------+--------+--------+
+| regno | name | class | bdate      | marks1 | marks2 | marks3 |
++-------+------+-------+------------+--------+--------+--------+
+| co1   | Tony | bca   | 2000-01-01 |     95 |     90 |     99 |
+| co2   | Tom  | bcom  | 2000-02-02 |     90 |     91 |     92 |
++-------+------+-------+------------+--------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student
+    -> where name
+    -> like "%T";
+Empty set (0.00 sec)
+
+mysql> select * from student
+    -> where name
+    -> like "%T%";
++-------+-------+-------+------------+--------+--------+--------+
+| regno | name  | class | bdate      | marks1 | marks2 | marks3 |
++-------+-------+-------+------------+--------+--------+--------+
+| co1   | Tony  | bca   | 2000-01-01 |     95 |     90 |     99 |
+| co2   | Tom   | bcom  | 2000-02-02 |     90 |     91 |     92 |
+| co4   | Motu  | bba   | 2000-04-04 |     94 |     93 |     91 |
+| co5   | Patlu | bca   | 2000-05-05 |     92 |     96 |     94 |
++-------+-------+-------+------------+--------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select min(marks1)
+    -> from student;
++-------------+
+| min(marks1) |
++-------------+
+|          90 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select max(marks1)
+    -> from student;
++-------------+
+| max(marks1) |
++-------------+
+|          95 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> update student
+    -> set name = "Raju"
+    -> where name = "Patlu";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++-------+-------+-------+------------+--------+--------+--------+
+| regno | name  | class | bdate      | marks1 | marks2 | marks3 |
++-------+-------+-------+------------+--------+--------+--------+
+| co1   | Tony  | bca   | 2000-01-01 |     95 |     90 |     99 |
+| co2   | Tom   | bcom  | 2000-02-02 |     90 |     91 |     92 |
+| co3   | Jerry | bsc   | 2000-03-03 |     92 |     94 |     92 |
+| co4   | Motu  | bba   | 2000-04-04 |     94 |     93 |     91 |
+| co5   | Raju  | bca   | 2000-05-05 |     92 |     96 |     94 |
++-------+-------+-------+------------+--------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentinfo        |
+| test               |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> create database EmployeDetails;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| employedetails     |
+| mysql              |
+| performance_schema |
+| studentinfo        |
+| test               |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> drop database employedetails;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentinfo        |
+| test               |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> create database EmployeeDetails;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use EmployeeDetails;
+Database changed
+mysql> create table Employee(empid int primary key,ename varchar(10),age int,salary int,deptno int);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table Department(deptno int primary key,dname varchar(20),managerid int);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc Employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| empid  | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(10) | YES  |     | NULL    |       |
+| age    | int(11)     | YES  |     | NULL    |       |
+| salary | int(11)     | YES  |     | NULL    |       |
+| deptno | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| deptno    | int(11)     | NO   | PRI | NULL    |       |
+| dname     | varchar(20) | YES  |     | NULL    |       |
+| managerid | int(11)     | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> insert into employee values(01,"Tony",21,20000,101);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employee values(02,"Tom",22,20000,102);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employee values(03,"Jerry",22,25000,103);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employee values(04,"Motu",23,35000,104);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employee values(05,"Patlu",21,30000,105);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from employee;
++-------+-------+------+--------+--------+
+| empid | ename | age  | salary | deptno |
++-------+-------+------+--------+--------+
+|     1 | Tony  |   21 |  20000 |    101 |
+|     2 | Tom   |   22 |  20000 |    102 |
+|     3 | Jerry |   22 |  25000 |    103 |
+|     4 | Motu  |   23 |  35000 |    104 |
+|     5 | Patlu |   21 |  30000 |    105 |
++-------+-------+------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> insert into department values(101,'bca',201);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(102,'bca',202);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(103,'ba',203);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into department values(104,'bba',204);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(105,'bba',205);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from department;
++--------+-------+-----------+
+| deptno | dname | managerid |
++--------+-------+-----------+
+|    101 | bca   |       201 |
+|    102 | bca   |       202 |
+|    103 | ba    |       203 |
+|    104 | bba   |       204 |
+|    105 | bba   |       205 |
++--------+-------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> alter table employee
+    -> add foreign key
+    -> deptno references department(depto);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'references department(depto)' at line 3
+mysql> alter table employee
+    -> add foreign key
+    -> deptno references department(deptno);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'references department(deptno)' at line 3
+mysql> alter table employee
+    -> add foreign key
+    -> (deptno) references department(deptno);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| empid  | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(10) | YES  |     | NULL    |       |
+| age    | int(11)     | YES  |     | NULL    |       |
+| salary | int(11)     | YES  |     | NULL    |       |
+| deptno | int(11)     | YES  | MUL | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> select * from employee
+    -> where salary
+    -> between 20000 and 30000;
++-------+-------+------+--------+--------+
+| empid | ename | age  | salary | deptno |
++-------+-------+------+--------+--------+
+|     1 | Tony  |   21 |  20000 |    101 |
+|     2 | Tom   |   22 |  20000 |    102 |
+|     3 | Jerry |   22 |  25000 |    103 |
+|     5 | Patlu |   21 |  30000 |    105 |
++-------+-------+------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select ename,salary
+    -> from employee
+    -> join department
+    -> on employee.deptno = department.deptno
+    -> where dname = "bca";
++-------+--------+
+| ename | salary |
++-------+--------+
+| Tony  |  20000 |
+| Tom   |  20000 |
++-------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select ename,dname
+    -> from employee
+    -> join department on employee.deptno = department.deptno
+    -> where managerid;
++-------+-------+
+| ename | dname |
++-------+-------+
+| Tony  | bca   |
+| Tom   | bca   |
+| Jerry | ba    |
+| Motu  | bba   |
+| Patlu | bba   |
++-------+-------+
+5 rows in set (0.02 sec)
+
+mysql> select ename,dname
+    -> from employee
+    -> join department on employee.deptno = department.deptno;
++-------+-------+
+| ename | dname |
++-------+-------+
+| Tony  | bca   |
+| Tom   | bca   |
+| Jerry | ba    |
+| Motu  | bba   |
+| Patlu | bba   |
++-------+-------+
+5 rows in set (0.00 sec)
+
+mysql>
