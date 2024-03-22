@@ -1,0 +1,343 @@
+
+mysql> create database movies;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use movies;
+Database changed
+mysql>
+mysql> create table Actor(
+    -> act_id int primary key,
+    -> act_name varchar(20),
+    -> act_gender char(10));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc actor;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| act_id     | int         | NO   | PRI | NULL    |       |
+| act_name   | varchar(20) | YES  |     | NULL    |       |
+| act_gender | char(10)    | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table director(
+    -> dir_id int primary key,
+    -> dir_name varchar(30),
+    -> dir_phone Gigint);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Gigint)' at line 4
+mysql>
+mysql> create table director(
+    -> dir_id int primary key,
+    -> dir_name varchar(30),
+    -> dir_phone bigint);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc director;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dir_id    | int         | NO   | PRI | NULL    |       |
+| dir_name  | varchar(30) | YES  |     | NULL    |       |
+| dir_phone | bigint      | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE MOVIES(
+    -> MOV_ID INT PRIMARY KEY,
+    -> MOV_TITLE VARCHAR(20),
+    -> MOV_YEAR INT,
+    -> MOV_LANG VARCHAR(20),
+    -> DIR_ID INT,
+    -> FOREIGN KEY(DIR_ID) REFERENCES DIRECTOR(DIR_ID));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc movies;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| MOV_ID    | int         | NO   | PRI | NULL    |       |
+| MOV_TITLE | varchar(20) | YES  |     | NULL    |       |
+| MOV_YEAR  | int         | YES  |     | NULL    |       |
+| MOV_LANG  | varchar(20) | YES  |     | NULL    |       |
+| DIR_ID    | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE MOVIE_CAST(
+    -> ACT_ID INT,
+    -> MOV_ID INT,
+    -> ROLE VARCHAR(10),
+    -> PRIMARY KEY(ACT_ID, MOV_ID),
+    -> FOREIGN KEY(ACT_ID) REFERENCES ACTOR(ACT_ID),
+    -> FOREIGN KEY(MOV_ID) REFERENCES MOVIES(MOV_ID));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc movie_cast;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| ACT_ID | int         | NO   | PRI | NULL    |       |
+| MOV_ID | int         | NO   | PRI | NULL    |       |
+| ROLE   | varchar(10) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE RATING(
+    -> MOV_ID INT PRIMARY KEY,
+    -> REV_STARS FLOAT,
+    -> FOREIGN KEY(MOV_ID) REFERENCES MOVIES(MOV_ID));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc rating;
++-----------+-------+------+-----+---------+-------+
+| Field     | Type  | Null | Key | Default | Extra |
++-----------+-------+------+-----+---------+-------+
+| MOV_ID    | int   | NO   | PRI | NULL    |       |
+| REV_STARS | float | YES  |     | NULL    |       |
++-----------+-------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO ACTOR VALUES(101,'ROWAN ATKINSON','M');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO ACTOR VALUES(102,'ELIZABETH','F');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO ACTOR VALUES(103,'RAJINIKANTH','M');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO ACTOR VALUES(104,'NEOLA JANE','F');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO ACTOR VALUES(105,'RISHAB SHETTY','M');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO ACTOR VALUES(106,'ANSEL ELGORT','M');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO ACTOR VALUES(107,'LAURA','F');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM ACTOR;
++--------+----------------+------------+
+| act_id | act_name       | act_gender |
++--------+----------------+------------+
+|    101 | ROWAN ATKINSON | M          |
+|    102 | ELIZABETH      | F          |
+|    103 | RAJINIKANTH    | M          |
+|    104 | NEOLA JANE     | F          |
+|    105 | RISHAB SHETTY  | M          |
+|    106 | ANSEL ELGORT   | M          |
+|    107 | LAURA          | F          |
++--------+----------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO DIRECTOR VALUES(201,'HITCHCOCK',9681855818);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO DIRECTOR VALUES(202,'PREETHAM',9866448172);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO DIRECTOR VALUES(203,'STEVEN SPIELBERG',9887541234);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO DIRECTOR VALUES(204,'SHANKAR',9478653428);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO DIRECTOR VALUES(205,'RAJAMOULI',9578653089);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM DIRECTOR;
++--------+------------------+------------+
+| dir_id | dir_name         | dir_phone  |
++--------+------------------+------------+
+|    201 | HITCHCOCK        | 9681855818 |
+|    202 | PREETHAM         | 9866448172 |
+|    203 | STEVEN SPIELBERG | 9887541234 |
+|    204 | SHANKAR          | 9478653428 |
+|    205 | RAJAMOULI        | 9578653089 |
++--------+------------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(301,'REAR WINDOW',1954,'ENGLISH',201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(302,'PADAYAPPA',2021,'TAMIL',202);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(303,'SUSPICION',1941,'ENGLISH',201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(304,'SHIVAJI',2007,'TAMIL',204);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(305,'BAHUBALI',2015,'TELUGU',205);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(306,'WEST SIDE STORIES',2020,'ENGLISH',203);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIES VALUES(307,'JURASSIC PARK',1993,'ENGLISH',203);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM MOVIES;
++--------+-------------------+----------+----------+--------+
+| MOV_ID | MOV_TITLE         | MOV_YEAR | MOV_LANG | DIR_ID |
++--------+-------------------+----------+----------+--------+
+|    301 | REAR WINDOW       |     1954 | ENGLISH  |    201 |
+|    302 | PADAYAPPA         |     2021 | TAMIL    |    202 |
+|    303 | SUSPICION         |     1941 | ENGLISH  |    201 |
+|    304 | SHIVAJI           |     2007 | TAMIL    |    204 |
+|    305 | BAHUBALI          |     2015 | TELUGU   |    205 |
+|    306 | WEST SIDE STORIES |     2020 | ENGLISH  |    203 |
+|    307 | JURASSIC PARK     |     1993 | ENGLISH  |    203 |
++--------+-------------------+----------+----------+--------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(101,301,'GUEST');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(101,303,'VILLAIN');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(102,303,'HEROINE');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(103,304,'HERO');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(104,301,'HEROINE');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(106,306,'CAMEO');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO MOVIE_CAST VALUES(107,307,'HEROINE');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM MOVIE_CAST;
++--------+--------+---------+
+| ACT_ID | MOV_ID | ROLE    |
++--------+--------+---------+
+|    101 |    301 | GUEST   |
+|    101 |    303 | VILLAIN |
+|    102 |    303 | HEROINE |
+|    103 |    304 | HERO    |
+|    104 |    301 | HEROINE |
+|    106 |    306 | CAMEO   |
+|    107 |    307 | HEROINE |
++--------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(301,3.5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(302,5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(303,4.5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(304,2.5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(305,5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(306,3.5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO RATING VALUES(307,3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM RATING;
++--------+-----------+
+| MOV_ID | REV_STARS |
++--------+-----------+
+|    301 |       3.5 |
+|    302 |         5 |
+|    303 |       4.5 |
+|    304 |       2.5 |
+|    305 |         5 |
+|    306 |       3.5 |
+|    307 |         3 |
++--------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> /*1. List the titles of all movies directed by ‘Hitchcock’:*/
+mysql> SELECT MOV_TITLE FROM MOVIES WHERE
+    -> DIR_ID = (SELECT DIR_ID FROM DIRECTOR WHERE DIR_NAME='HITCHCOCK');
++-------------+
+| MOV_TITLE   |
++-------------+
+| REAR WINDOW |
+| SUSPICION   |
++-------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT MOV_TITLE FROM MOVIES M NATURAL JOIN MOVIE_CAST WHERE
+    -> ACT_ID IN
+    -> (SELECT ACT_ID FROM MOVIE_CAST GROUP BY ACT_ID HAVING COUNT(*)>=2);
++-------------+
+| MOV_TITLE   |
++-------------+
+| REAR WINDOW |
+| SUSPICION   |
++-------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT ACT_NAME FROM ACTOR
+    -> JOIN MOVIE_CAST USING(ACT_ID)
+    -> JOIN MOVIES USING(MOV_ID)
+    -> WHERE MOV_YEAR NOT BETWEEN 2005 AND 2015;
++----------------+
+| ACT_NAME       |
++----------------+
+| ROWAN ATKINSON |
+| NEOLA JANE     |
+| ELIZABETH      |
+| ANSEL ELGORT   |
+| LAURA          |
++----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT MOV_TITLE MOVIE_NAME, MAX(REV_STARS) RATING FROM MOVIES INNER
+    -> JOIN RATING USING(MOV_ID)
+    -> GROUP BY MOV_TITLE HAVING MAX(REV_STARS)>0
+    -> ORDER BY MOV_TITLE;
++-------------------+--------+
+| MOVIE_NAME        | RATING |
++-------------------+--------+
+| BAHUBALI          |      5 |
+| JURASSIC PARK     |      3 |
+| PADAYAPPA         |      5 |
+| REAR WINDOW       |    3.5 |
+| SHIVAJI           |    2.5 |
+| SUSPICION         |    4.5 |
+| WEST SIDE STORIES |    3.5 |
++-------------------+--------+
+7 rows in set (0.00 sec)
+
+mysql> UPDATE RATING SET REV_STARS=5
+    -> WHERE MOV_ID IN
+    -> (SELECT MOV_ID FROM MOVIES WHERE DIR_ID IN
+    -> (SELECT DIR_ID FROM DIRECTOR WHERE DIR_NAME='STEVEN SPIELBERG'));
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from rating;
++--------+-----------+
+| MOV_ID | REV_STARS |
++--------+-----------+
+|    301 |       3.5 |
+|    302 |         5 |
+|    303 |       4.5 |
+|    304 |       2.5 |
+|    305 |         5 |
+|    306 |         5 |
+|    307 |         5 |
++--------+-----------+
+7 rows in set (0.00 sec)
+
+mysql>
